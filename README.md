@@ -394,5 +394,3 @@ my-project/
 ```
 
 No changes to `package.json` are required. helm-ctrl automatically prepends `./node_modules/.bin` to `PATH` when running commands, so locally installed binaries work without `npx`.
-
-
