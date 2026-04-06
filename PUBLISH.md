@@ -70,16 +70,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Use Node.js 22
-        uses: actions/setup-node@v4
+      - name: Use Node.js 24
+        uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
-
-      - name: Use npm 11 for trusted publishing
-        run: npm install -g npm@^11.5.1
 
       - name: Verify tag matches package version
         run: |
@@ -113,6 +110,7 @@ Notes:
 - In the npm UI, enter only the workflow filename: `publish.yml`.
 - For trusted publishing, npm generates provenance automatically for public packages from public repos.
 - npm currently requires npm CLI `11.5.1+` and Node `22.14.0+` for trusted publishing.
+- The workflow uses Node `24`, which already satisfies the npm requirement without self-upgrading `npm` in the job.
 - The workflow refuses to publish if the git tag and `package.json` version do not match.
 - This repo currently does not have a `package-lock.json`, so the install step is skipped.
 - If the package ever becomes scoped, change the publish command to `npm publish --access public`.
