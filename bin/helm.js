@@ -2,7 +2,11 @@
 
 const path = require('path')
 const fs = require('fs')
-const { main } = require('../lib/engine')
+const { main, loadDotEnv } = require('../lib/engine')
+
+// Load .env before requiring the config so process.env is populated
+// when helm.config.js runs (e.g. for port lookups via process.env)
+loadDotEnv()
 
 function loadConfig() {
   const cwd = process.cwd()
