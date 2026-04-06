@@ -61,6 +61,19 @@ npm install helm-ctrl --save-dev
 
 ---
 
+## Development
+
+```bash
+npm install
+npm run lint
+npm test
+npm run check
+```
+
+`npm run check` is the same standards gate used in CI, so local and CI validation stay aligned.
+
+---
+
 ## Config File
 
 helm-ctrl looks for a config file in the current working directory only. It tries `helm.config.js` first, then `helm.config.json`.

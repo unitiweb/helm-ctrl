@@ -41,8 +41,8 @@ jobs:
         if: ${{ hashFiles('package-lock.json') != '' }}
         run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - name: Run checks
+        run: npm run check
 
       - name: Publish to npm
         run: npm publish

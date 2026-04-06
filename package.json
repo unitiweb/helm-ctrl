@@ -4,7 +4,10 @@
   "description": "Config-driven interactive CLI task runner",
   "author": "Dave Torres",
   "scripts": {
-    "test": "node --test test/engine.test.js"
+    "lint": "eslint .",
+    "lint:fix": "npm run lint -- --fix",
+    "test": "node --test test/engine.test.js",
+    "check": "npm run lint && npm test"
   },
   "license": "MIT",
   "main": "lib/engine.js",
@@ -32,5 +35,8 @@
   ],
   "engines": {
     "node": ">=14"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1"
   }
 }

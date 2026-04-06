@@ -10,7 +10,7 @@ const {
   substituteVars,
   matches,
   resolveCommand,
-  buildIndex,
+  buildIndex
 } = require('../lib/engine')
 
 // ---------------------------------------------------------------------------
@@ -258,13 +258,13 @@ describe('resolveCommand', () => {
       commands: [
         { name: 'migrate', desc: 'Run migrations', cmd: 'artisan migrate' },
         { name: 'migrate:rollback', desc: 'Rollback', cmd: 'artisan migrate:rollback' },
-        { name: 'migrate:make', desc: 'Make migration', cmd: 'artisan make:migration' },
+        { name: 'migrate:make', desc: 'Make migration', cmd: 'artisan make:migration' }
       ]
     },
     {
       name: 'Core',
       commands: [
-        { name: 'up', desc: 'Start services', cmd: 'docker compose up' },
+        { name: 'up', desc: 'Start services', cmd: 'docker compose up' }
       ]
     }
   ]
@@ -327,13 +327,13 @@ describe('buildIndex', () => {
       name: 'Core',
       commands: [
         { name: 'up', desc: 'Start', cmd: 'docker compose up' },
-        { name: 'down', desc: 'Stop', cmd: 'docker compose down' },
+        { name: 'down', desc: 'Stop', cmd: 'docker compose down' }
       ]
     },
     {
       name: 'Database',
       commands: [
-        { name: 'migrate', desc: 'Migrate', cmd: 'artisan migrate' },
+        { name: 'migrate', desc: 'Migrate', cmd: 'artisan migrate' }
       ]
     }
   ]
