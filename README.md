@@ -1,6 +1,11 @@
 # helm-ctrl
 
-A config-driven interactive CLI task runner. Define your project's commands once in a config file and run them from anywhere with a clean menu, fuzzy filtering, and built-in URL opening.
+A config-driven interactive CLI task runner. Define your project's commands once in a config file and run them from that project directory with a clean menu, fuzzy filtering, and built-in URL opening.
+
+## Requirements
+
+- Node.js 14 or newer
+- A `helm.config.js` or `helm.config.json` file in the current working directory
 
 ---
 
@@ -8,14 +13,15 @@ A config-driven interactive CLI task runner. Define your project's commands once
 
 ### Global (recommended)
 
-Installs the `helm` command system-wide so you can run it directly from any project:
+Installs the `helm` command system-wide so you can run it directly in any project that has a Helm config file:
 
 ```bash
 npm install -g helm-ctrl
 ```
 
 ```bash
-helm              # works directly
+cd your-project
+helm              # opens interactive menu
 helm help
 helm build
 ```
@@ -57,7 +63,9 @@ npm install helm-ctrl --save-dev
 
 ## Config File
 
-helm-ctrl looks for a config file in the current working directory. It tries `helm.config.js` first, then `helm.config.json`.
+helm-ctrl looks for a config file in the current working directory only. It tries `helm.config.js` first, then `helm.config.json`.
+
+If both files exist, `helm.config.js` wins.
 
 ### When to use each
 
@@ -135,13 +143,27 @@ Then use `{HELM_VAR}` placeholders in any `cmd` string:
 2. `process.env` (shell-exported variables)
 3. `default` value in the config
 
-Shell-set variables always win — helm-ctrl never overwrites a variable that was already set in your environment.
+That precedence is specific to `config.env`. If a value exists in both the env file and `process.env`, the env file wins.
+
+Separate from that, helm-ctrl also preloads `.env` into `process.env` before loading `helm.config.js`, but it does not overwrite variables that were already exported in the shell. That matters only if your JS config reads `process.env` directly.
+
+### Direct `${ENV_VAR}` placeholders
+
+You can also use shell-style `${ENV_VAR}` placeholders directly in any `cmd` string:
+
+```json
+{ "name": "echo:port", "desc": "Print API port", "cmd": "echo ${API_PORT}" }
+```
+
+This is most useful in JSON configs when you want simple `process.env` substitution without defining a `config.env` mapping.
 
 ---
 
 ## JS Config (`helm.config.js`)
 
-For most projects with a `.env` file, use `config.env` in a JSON config and skip the JS config entirely. Use a JS config only when you need genuine runtime logic — conditional commands, imports, computed values beyond simple env lookups.
+For most projects with a `.env` file, use `config.env` in a JSON config and skip the JS config entirely. Use a JS config only when you need genuine runtime logic: conditional commands, imports, or computed values beyond simple env lookups.
+
+Because helm-ctrl preloads `.env` before `helm.config.js` runs, `process.env` is already populated inside the JS config.
 
 ```js
 // helm.config.js
@@ -210,6 +232,8 @@ JSON configs support the full `config.env` variable mapping, making dynamic valu
 
 ## Running Commands
 
+All command execution happens relative to the current working directory, and all CLI entrypoints require a config file there.
+
 ### Direct invocation
 
 ```bash
@@ -230,6 +254,14 @@ Any arguments after the command name are appended to the shell command:
 ```bash
 helm artisan make:model Post
 # runs: docker compose exec laravel php artisan make:model Post
+```
+
+The same applies to namespaced commands:
+
+```bash
+helm migrate rollback --step=2
+# resolves command: migrate:rollback
+# appends: --step=2
 ```
 
 To prevent extra args from being forwarded, set `args: false` on the command definition:
@@ -264,7 +296,7 @@ You can also open the menu with a pre-applied filter:
 
 ```bash
 helm menu ios
-helm menu --menu ios   # same
+helm --menu ios        # same
 ```
 
 At the selection prompt:
@@ -286,6 +318,8 @@ helm -h
 ```
 
 The filter matches against both the command name and its description, so `helm help browser` would surface any command with "browser" in its `desc`.
+
+Note: help still requires a config file in the current directory. If no config file is present, helm-ctrl exits before rendering help.
 
 ---
 
@@ -341,6 +375,7 @@ Sections in the config are purely for visual grouping in help output — they ha
 ```
 my-project/
   helm.config.js     ← config file (or helm.config.json)
+  .env               ← optional, used by config.env and JS config preload
   package.json
   ...
 ```
