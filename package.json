@@ -1,0 +1,24 @@
+{
+  "name": "helm-ctrl",
+  "version": "0.1.0",
+  "description": "Config-driven interactive CLI task runner",
+  "main": "lib/engine.js",
+  "bin": {
+    "helm": "bin/helm.js"
+  },
+  "files": [
+    "bin/",
+    "lib/"
+  ],
+  "keywords": [
+    "cli",
+    "task-runner",
+    "interactive",
+    "menu",
+    "devtools"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}
