@@ -2,6 +2,11 @@
   "name": "helm-ctrl",
   "version": "0.1.0",
   "description": "Config-driven interactive CLI task runner",
+  "author": "Dave Torres",
+  "scripts": {
+    "test": "node --test test/engine.test.js"
+  },
+  "license": "MIT",
   "main": "lib/engine.js",
   "bin": {
     "helm": "bin/helm.js"
@@ -10,6 +15,14 @@
     "bin/",
     "lib/"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unitiweb/helm-ctrl.git"
+  },
+  "homepage": "https://github.com/unitiweb/helm-ctrl#readme",
+  "bugs": {
+    "url": "https://github.com/unitiweb/helm-ctrl/issues"
+  },
   "keywords": [
     "cli",
     "task-runner",
@@ -17,7 +30,6 @@
     "menu",
     "devtools"
   ],
-  "license": "MIT",
   "engines": {
     "node": ">=14"
   }

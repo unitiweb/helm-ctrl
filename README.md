@@ -6,29 +6,51 @@ A config-driven interactive CLI task runner. Define your project's commands once
 
 ## Installation
 
+### Global (recommended)
+
+Installs the `helm` command system-wide so you can run it directly from any project:
+
 ```bash
 npm install -g helm-ctrl
 ```
 
-Or link locally during development:
-
 ```bash
-cd helm-ctrl
-npm link
+helm              # works directly
+helm help
+helm build
 ```
 
----
+### Per-project
 
-## Quick Start
-
-1. Add a `helm.config.js` or `helm.config.json` to your project root
-2. Run `helm` from that directory
+Install as a dev dependency if you want helm-ctrl pinned to the project and available to all contributors via `npm install`:
 
 ```bash
-cd my-project
-helm              # opens interactive menu
-helm help         # lists all commands
-helm build        # runs the "build" command
+npm install helm-ctrl --save-dev
+```
+
+Because it's not a global install, the `helm` command won't be on your PATH. Use it via npm scripts instead. Add this to your `package.json`:
+
+```json
+"scripts": {
+  "helm": "helm"
+}
+```
+
+Then run it with:
+
+```bash
+npm run helm              # opens interactive menu
+npm run helm -- help      # pass arguments with --
+npm run helm -- build
+```
+
+### Both (best of both worlds)
+
+Install globally for your own convenience, and also as a dev dependency so teammates get it automatically:
+
+```bash
+npm install -g helm-ctrl
+npm install helm-ctrl --save-dev
 ```
 
 ---
