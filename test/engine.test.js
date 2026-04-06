@@ -10,7 +10,8 @@ const {
   substituteVars,
   matches,
   resolveCommand,
-  buildIndex
+  buildIndex,
+  expandCmdRefs
 } = require('../lib/engine')
 
 // ---------------------------------------------------------------------------
@@ -314,6 +315,60 @@ describe('resolveCommand', () => {
   it('prefers the longest matching command', () => {
     const { command } = resolveCommand(['migrate', 'make'], index)
     assert.equal(command.name, 'migrate:make')
+  })
+})
+
+// ---------------------------------------------------------------------------
+// expandCmdRefs
+// ---------------------------------------------------------------------------
+
+describe('expandCmdRefs', () => {
+  const sections = [
+    {
+      name: 'Core',
+      commands: [
+        { name: 'sail', desc: 'Sail CLI', cmd: 'vendor/bin/sail' },
+        { name: 'artisan', desc: 'Artisan CLI', cmd: 'sail artisan' }
+      ]
+    },
+    {
+      name: 'Database',
+      commands: [
+        { name: 'db:migrate', desc: 'Run migrations', cmd: 'artisan migrate' }
+      ]
+    }
+  ]
+  const index = buildIndex(sections)
+
+  it('returns cmd unchanged when first word is not a command', () => {
+    assert.equal(expandCmdRefs('vendor/bin/sail up', index), 'vendor/bin/sail up')
+  })
+
+  it('expands a single-level reference with trailing args', () => {
+    assert.equal(expandCmdRefs('sail up', index), 'vendor/bin/sail up')
+  })
+
+  it('expands a reference with no trailing args', () => {
+    assert.equal(expandCmdRefs('sail', index), 'vendor/bin/sail')
+  })
+
+  it('expands nested references', () => {
+    assert.equal(expandCmdRefs('artisan migrate', index), 'vendor/bin/sail artisan migrate')
+  })
+
+  it('expands deeply nested references (db:migrate → artisan → sail)', () => {
+    assert.equal(expandCmdRefs('db:migrate', index), 'vendor/bin/sail artisan migrate')
+  })
+
+  it('throws on circular references', () => {
+    const circular = buildIndex([{
+      name: 'circular',
+      commands: [
+        { name: 'a', desc: '', cmd: 'b x' },
+        { name: 'b', desc: '', cmd: 'a x' }
+      ]
+    }])
+    assert.throws(() => expandCmdRefs('a', circular), /[Cc]ircular/)
   })
 })
 
