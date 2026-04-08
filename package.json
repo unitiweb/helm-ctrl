@@ -1,6 +1,6 @@
 {
   "name": "helm-ctrl",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Config-driven interactive CLI task runner",
   "author": "Dave Torres",
   "scripts": {
