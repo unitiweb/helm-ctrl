@@ -1,0 +1,77 @@
+{
+  "name": "helm-ctrl-vscode",
+  "displayName": "Helm Ctrl",
+  "description": "Browse Helm command sections from the VS Code activity bar and run them in the integrated terminal.",
+  "version": "0.0.1",
+  "publisher": "unitiweb",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.88.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "helm",
+    "cli",
+    "commands",
+    "sidebar"
+  ],
+  "main": "./src/extension.js",
+  "activationEvents": [
+    "onView:helmCtrl.explorer",
+    "onCommand:helmCtrl.refresh",
+    "onCommand:helmCtrl.openConfig",
+    "onCommand:helmCtrl.runCommand"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "helmCtrl",
+          "title": "Helm",
+          "icon": "media/helm.svg"
+        }
+      ]
+    },
+    "views": {
+      "helmCtrl": [
+        {
+          "id": "helmCtrl.explorer",
+          "name": "Commands"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "helmCtrl.refresh",
+        "title": "Refresh Helm Commands",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "helmCtrl.openConfig",
+        "title": "Open Helm Config",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "helmCtrl.runCommand",
+        "title": "Run Helm Command",
+        "icon": "$(play)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "helmCtrl.refresh",
+          "when": "view == helmCtrl.explorer",
+          "group": "navigation"
+        },
+        {
+          "command": "helmCtrl.openConfig",
+          "when": "view == helmCtrl.explorer",
+          "group": "navigation"
+        }
+      ]
+    }
+  }
+}
